@@ -17,7 +17,7 @@ The Minimum Viable Product must be completed in three hours.
 Follow these steps to set up and work on your project:
 
 - [ ] Create a forked copy of this project.
-- [ ] Add your _Team Lead_ as collaborator on Github.
+- [ ] Add your _Team Lead_ as collaborator on GitHub.
 - [ ] Clone your forked version of the Repository.
 - [ ] Create a new Branch on the clone: git checkout -b `firstName-lastName`.
 - [ ] Implement the project on this Branch, committing changes regularly.
@@ -48,7 +48,7 @@ Middleware is used to assist the developer in helping create dry code, middle wa
 
 - [ ] Describe a Resource?
 
-A resource itself is an abstraction , it can be any information that can be named. The domain entities of an application (e.g. a person, a user, a invoice, a collection of invoices, etc) can be resources.
+A resource itself is an abstraction , it can be any information that can be named. The domain entities of an application (e.g. a person, a user, a invoice, a collection of invoices, etc.) can be resources.
 
 - [ ] What can the API return to help clients know if a request was successful?
 
@@ -56,7 +56,7 @@ Api return a status and a message
 
 - [ ] How can we partition our application into sub-applications?
 
-Using express.router we can create sub-app which provides alot of flexibility.
+Using express.router we can create sub-app which provides a lot of flexibility.
 
 ## Minimum Viable Product
 
