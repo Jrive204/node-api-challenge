@@ -40,13 +40,23 @@ Demonstrate your understanding of this Sprint's concepts by answering the follow
 
 - [ ] Mention two parts of Express that you learned about this week.
 
+Route handlers and express.router()
+
 - [ ] Describe Middleware?
+
+Middleware is used to assist the developer in helping create dry code, middle ware can execute code, make changes to the request and the response object, end the request-response cycle, and/or call the next middleware in the stack.
 
 - [ ] Describe a Resource?
 
+A resource itself is an abstraction , it can be any information that can be named. The domain entities of an application (e.g. a person, a user, a invoice, a collection of invoices, etc) can be resources.
+
 - [ ] What can the API return to help clients know if a request was successful?
 
+Api return a status and a message
+
 - [ ] How can we partition our application into sub-applications?
+
+Using express.router we can create sub-app which provides alot of flexibility.
 
 ## Minimum Viable Product
 
