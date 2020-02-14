@@ -13,11 +13,17 @@ import {
 import Axios from "axios";
 
 const Data = ({ ele, handleEdit, handleDelete, loading, setLoading }) => {
-  const [comment, setcomment] = useState({ text: "" });
+  const [Selected, setSelected] = useState(false);
+
+  const [comment, setcomment] = useState({
+    description: "",
+    notes: "",
+    completed: Selected
+  });
   const [state, setstate] = useState([]);
 
   useEffect(() => {
-    Axios.get(`https://hobbitsls.herokuapp.com/api/posts/${ele.id}/comments`)
+    Axios.get(`http://localhost:5000/api/actions/${ele.id}/projects`)
       .then(
         res =>
           console.log(res, "GET") &
@@ -36,38 +42,39 @@ const Data = ({ ele, handleEdit, handleDelete, loading, setLoading }) => {
 
   const handlesubmit = e => {
     e.preventDefault();
-    Axios.post(
-      `https://hobbitsls.herokuapp.com/api/posts/${ele.id}/comments`,
-      comment
-    )
+    Axios.post(`http://localhost:5000/api/actions/${ele.id}/projects`, comment)
       .then(
         res =>
-          console.log(res, "post") & setLoading(true) & setcomment({ text: "" })
+          console.log(res, "post") &
+          setLoading(true) &
+          setSelected(false) &
+          setcomment({ description: "", notes: "", completed: Selected })
       )
       .catch(err => console.log(err, "error"));
   };
 
   const commentdelete = (e, id) => {
     e.preventDefault();
-    Axios.delete(`https://hobbitsls.herokuapp.com/api/posts/comments/${id}`)
+    Axios.delete(`http://localhost:5000/api/actions/${id}`)
       .then(
         res =>
           console.log(res, "delete") &
           setLoading(true) &
-          setcomment({ text: "" })
+          setSelected(false) &
+          setcomment({ description: "", notes: "", completed: Selected })
       )
       .catch(err => console.log(err));
   };
 
   const handlecommentEdit = (e, id) => {
     e.preventDefault();
-    Axios.put(
-      `https://hobbitsls.herokuapp.com/api/posts/comments/${id}`,
-      comment
-    )
+    Axios.put(`http://localhost:5000/api/actions/${id}`, comment)
       .then(
         res =>
-          console.log(res, "post") & setLoading(true) & setcomment({ text: "" })
+          console.log(res, "PUTTTT") &
+          setLoading(true) &
+          setSelected(false) &
+          setcomment({ description: "", notes: "", completed: Selected })
       )
       .catch(err => console.log(err, "post"));
   };
@@ -78,19 +85,50 @@ const Data = ({ ele, handleEdit, handleDelete, loading, setLoading }) => {
         <Form onSubmit={handlesubmit}>
           <FormGroup className='mb-2 mr-sm-2 mb-sm-0'>
             <Label className='mr-sm-2'>
-              Name:
+              Description:
               <Input
-                type='textarea'
-                name='text'
+                name='description'
                 placeholder='Text here'
-                value={comment.text}
+                value={comment.description}
                 onChange={handleChange}
               />
             </Label>
           </FormGroup>
-          <Button color='info' size='sm'>
+          <FormGroup className='mb-2 mr-sm-2 mb-sm-0'>
+            <Label className='mr-sm-2'>
+              Notes:
+              <Input
+                type='textarea'
+                name='notes'
+                placeholder='Text here'
+                value={comment.notes}
+                onChange={handleChange}
+              />
+            </Label>
+          </FormGroup>
+          <Button
+            color='primary'
+            size='sm'
+            onClick={() =>
+              setSelected(1) & setcomment({ ...comment, completed: true })
+            }
+            active={Selected === 1}>
+            True
+          </Button>
+          <Button
+            color='danger'
+            size='sm'
+            onClick={() =>
+              setSelected(2) & setcomment({ ...comment, completed: false })
+            }
+            active={Selected === 2}>
+            False
+          </Button>
+          <br />
+          <Button style={{ marginTop: "2%" }} color='info' size='medium'>
             Submit
           </Button>
+          {console.log(comment, "comment")}
         </Form>
       </div>
 
@@ -106,18 +144,34 @@ const Data = ({ ele, handleEdit, handleDelete, loading, setLoading }) => {
         <CardText>
           <h5>{ele.description}</h5>
         </CardText>
+        <CardText>
+          <h5>
+            completed :
+            {ele.completed === true ? <span> True </span> : <span>False</span>}
+          </h5>
+          {console.log(ele.completed, "completed")}
+        </CardText>
         {state.length === 0 ? (
           <h4 style={{ textDecoration: "underline", marginBottom: "3%" }}>
-            No Comments
+            No Actions
           </h4>
         ) : (
           <CardText>
             <br />
-            Comments :
+            <h4 style={{ textDecoration: "underline" }}>Actions</h4>
             {state.map(data => (
-              <p>
-                {data.text}{" "}
+              <div>
+                <span
+                  style={{
+                    fontSize: "1.3rem",
+                    fontWeight: "500",
+                    marginLeft: "10%"
+                  }}>
+                  {data.description}
+                </span>{" "}
+                &nbsp;
                 <Badge
+                  style={{ cursor: "pointer" }}
                   onClick={e => handlecommentEdit(e, data.id)}
                   color='warning'
                   pill>
@@ -128,13 +182,22 @@ const Data = ({ ele, handleEdit, handleDelete, loading, setLoading }) => {
                     color: "red",
                     fontWeight: "700",
                     fontSize: "1rem",
-                    marginLeft: "1%"
+                    marginLeft: "1%",
+                    cursor: "pointer"
                   }}
                   onClick={e => commentdelete(e, data.id)}>
                   X
                 </span>
-                {/* {data.id} */}
-              </p>
+                <p>
+                  Notes: {data.notes} <br />
+                  completed :
+                  {data.completed === true ? (
+                    <span> True </span>
+                  ) : (
+                    <span>False</span>
+                  )}
+                </p>
+              </div>
             ))}
           </CardText>
         )}

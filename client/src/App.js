@@ -6,8 +6,14 @@ import Loader from "react-loader-spinner";
 import Data from "./Data";
 
 function App() {
-  const [user, setUser] = useState({ name: "", description: "" });
+  const [Selected, setSelected] = useState(false);
+  const [user, setUser] = useState({
+    name: "",
+    description: "",
+    completed: Selected
+  });
   const [data, setData] = useState([]);
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -30,7 +36,8 @@ function App() {
         res =>
           console.log(res, "post") &
           setLoading(true) &
-          setUser({ name: "", description: "" })
+          setSelected(false) &
+          setUser({ name: "", description: "", completed: Selected })
       )
       .catch(err => console.log(err, "error"));
   };
@@ -41,17 +48,19 @@ function App() {
         res =>
           console.log(res, "post") &
           setLoading(true) &
-          setUser({ name: "", description: "" })
+          setSelected(false) &
+          setUser({ name: "", description: "", completed: Selected })
       )
       .catch(err => console.log(err, "post"));
   };
   const handleDelete = id => {
-    Axios.delete(`https://hobbitsls.herokuapp.com/api/posts/${id}`)
+    Axios.delete(`http://localhost:5000/api/projects/${id}`)
       .then(
         res =>
           console.log(res, "delete") &
           setLoading(true) &
-          setUser({ name: "", description: "" })
+          setSelected(false) &
+          setUser({ name: "", description: "", completed: Selected })
       )
       .catch(err => console.log(err));
   };
@@ -89,7 +98,26 @@ function App() {
             />
           </Label>
         </FormGroup>
-        <Button>Submit</Button>
+        Completed: &nbsp;
+        <Button
+          color='primary'
+          size='sm'
+          onClick={() => setSelected(1) & setUser({ ...user, completed: true })}
+          active={Selected === 1}>
+          True
+        </Button>
+        <Button
+          color='danger'
+          size='sm'
+          onClick={() =>
+            setSelected(2) & setUser({ ...user, completed: false })
+          }
+          active={Selected === 2}>
+          False
+        </Button>
+        <br />
+        <Button style={{ marginTop: "1%" }}>Submit</Button>
+        {console.log(user, "USER")}
       </Form>
       <div
         style={{
@@ -114,6 +142,7 @@ function App() {
             {data.map(ele => (
               <Data
                 ele={ele}
+                key={ele.id}
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
                 loading={loading}
