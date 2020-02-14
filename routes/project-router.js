@@ -32,7 +32,6 @@ router.post("/", validateProject, (req, res) => {
   ProjectData.insert(req.body)
     .then(project => res.status(200).json(project))
     .catch(err => res.status(500).json(err.message));
-  console.log(Object.keys(req.body).length, "USERSSS!!@#!");
 });
 
 // DELETE -----
@@ -45,10 +44,19 @@ router.delete("/:id", validateProjectid, (req, res) => {
     .catch(err => res.status(500).json(err.message));
 });
 
+// PUT -----
+
+router.put("/:id", validateProject, validateProjectid, (req, res) => {
+  const { id } = req.params;
+
+  ProjectData.update(id, req.body)
+    .then(update => res.status(200).json(update || "ID Change Successful"))
+    .catch(err => res.status(500).json(err.message));
+});
+
 //Middleware
 
 function validateProjectid(req, res, next) {
-  // do your magic!
   const { id } = req.params;
   ProjectData.get(id)
     .then(projects =>
